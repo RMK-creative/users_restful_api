@@ -32,16 +32,18 @@ app.get("/users/:id", (req, res) => {
 });
 
 // create new user
-app.post("/users", (req, res) => {
-  console.log(req.body);
-  const { first_name, last_name, age } = req.body;
-  pool
-    .query(
+app.post("/users", async (req, res) => {
+  try {
+    const { first_name, last_name, age } = req.body;
+    const newUser = await pool.query(
       "INSERT INTO users(first_name, last_name, age) VALUES($1, $2, $3) RETURNING *",
       [first_name, last_name, age]
-    )
-    .then((data) => res.status(201).json(data))
-    .catch((e) => res.sendStatus(404));
+    );
+
+    res.json(`New user added`);
+  } catch (error) {
+    console.log("Error", error.message);
+  }
 });
 
 // update user
