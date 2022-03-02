@@ -15,20 +15,26 @@ const pool = new Pool({
 });
 
 // get all users
-app.get("/users", (req, res) => {
-  pool
-    .query("SELECT * FROM users;")
-    .then((data) => res.json(data.rows))
-    .catch((e) => res.sendStatus(500));
+app.get("/users", async (req, res) => {
+  try {
+    const allUsers = await pool.query("SELECT * FROM users;");
+    res.json(allUsers.rows);
+  } catch (error) {
+    console.log("Error", error.message);
+  }
 });
 
 // get user by id
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
   const { id } = req.params;
-  pool
-    .query("SELECT * FROM users WHERE users.id = $1", [id])
-    .then((data) => res.json(data.rows[0]))
-    .catch((e) => res.sendStatus(500));
+  try {
+    const user = await pool.query("SELECT * FROM users WHERE users.id = $1", [
+      id,
+    ]);
+    res.json(user.rows[0]);
+  } catch (error) {
+    console.log("Error", error.message);
+  }
 });
 
 // create new user
