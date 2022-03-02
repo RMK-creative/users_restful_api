@@ -42,10 +42,10 @@ app.get("/users/:id", async (req, res) => {
 // create new user
 app.post("/users", async (req, res) => {
   try {
-    const { first_name, date, user_id } = req.body;
+    const { first_name, last_name, age } = req.body;
     const newOrder = await pool.query(
-      "INSERT INTO users(first_name, date, user_id) VALUES($1, $2, $3) RETURNING *",
-      [first_name, date, user_id]
+      "INSERT INTO users(first_name, last_name, age) VALUES($1, $2, $3) RETURNING *",
+      [first_name, last_name, age]
     );
 
     res.json(`New order added`);
