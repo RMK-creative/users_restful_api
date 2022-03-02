@@ -47,10 +47,20 @@ app.post("/users", async (req, res) => {
 });
 
 // update user
-// app.put("/users/:id", (req, res) => {
-//     const {id} = req.params;
-//     const {  }
-// })
+app.put("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // WHERE
+    const { first_name, last_name, age } = req.body; // SET
+
+    const updateUser = await pool.query(
+      "UPDATE users SET first_name = $1, last_name= $2, age= $3 WHERE id = $4",
+      [first_name, last_name, age, id]
+    );
+    res.json(`User ${id} updated`);
+  } catch (error) {
+    console.log("Error", error.message);
+  }
+});
 
 // delete user
 app.delete("/users/:id", async (req, res) => {
